@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temperature Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .converter {
+      background-color: #fff;
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 500px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 20px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #c05e5e;
+      color: rgb(97, 24, 24);
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #58eccc;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="converter">
+    <h2>Temperature Converter</h2>
+    <input type="number" id="tempInput" placeholder="Enter Temperature">
+    <select id="fromUnit">
+      <option value="C">Celsius (°C)</option>
+      <option value="F">Fahrenheit (°F)</option>
+      <option value="K">Kelvin (K)</option>
+    </select>
+    <select id="toUnit">
+      <option value="C">Celsius (°C)</option>
+      <option value="F">Fahrenheit (°F)</option>
+      <option value="K">Kelvin (K)</option>
+    </select>
+    <button onclick="convertTemperature()">Convert</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function convertTemperature() {
+      const temp = parseFloat(document.getElementById('tempInput').value);
+      const from = document.getElementById('fromUnit').value;
+      const to = document.getElementById('toUnit').value;
+
+      if (isNaN(temp)) {
+        document.getElementById('result').innerText = "Please enter a valid temperature.";
+        return;
+      }
+
+      let converted;
+
+      if (from === to) {
+        converted = temp;
+      } else if (from === "C" && to === "F") {
+        converted = (temp * 9/5) + 32;
+      } else if (from === "C" && to === "K") {
+        converted = temp + 273.15;
+      } else if (from === "F" && to === "C") {
+        converted = (temp - 32) * 5/9;
+      } else if (from === "F" && to === "K") {
+        converted = (temp - 32) * 5/9 + 273.15;
+      } else if (from === "K" && to === "C") {
+        converted = temp - 273.15;
+      } else if (from === "K" && to === "F") {
+        converted = (temp - 273.15) * 9/5 + 32;
+      }
+
+      document.getElementById('result').innerText = `Converted Temperature: ${converted.toFixed(2)} ${to}`;
+    }
+  </script>
+</body>
+</html>
