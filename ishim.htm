@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alice's Home</title>
+<style>
+:root{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --accent:#6366f1;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#e2e8f0;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:sans-serif;
+}
+
+body{
+  display:flex;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:var(--text);
+}
+
+/* Sidebar */
+.sidebar{
+  width:230px;
+  height:100vh;
+  background:#020617;
+  padding:20px;
+}
+.sidebar h2{
+  color:var(--accent);
+  margin-bottom:20px;
+}
+.sidebar li{
+  list-style:none;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
+  cursor:pointer;
+}
+.sidebar li:hover{
+  background:var(--card);
+}
+
+/* Main */
+.main{
+  flex:1;
+  padding:20px;
+}
+
+/* Topbar */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+.badge{
+  background:var(--card);
+  padding:8px 12px;
+  border-radius:15px;
+}
+
+/* Energy */
+.energy{
+  background:linear-gradient(135deg,#6366f1,#22c55e);
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:15px;
+}
+
+/* Card */
+.card{
+  background:rgba(30,41,59,0.9);
+  padding:15px;
+  border-radius:15px;
+  text-align:center;
+  transition:0.3s;
+}
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.status{
+  font-size:12px;
+  margin:8px 0;
+}
+
+/* Toggle */
+.switch{
+  position:relative;
+  width:45px;
+  height:22px;
+  display:inline-block;
+}
+.switch input{
+  display:none;
+}
+
+.slider{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:var(--red);
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:white;
+  top:2px;
+  left:2px;
+  border-radius:50%;
+  transition:.3s;
+}
+
+input:checked + .slider{
+  background:var(--green);
+}
+input:checked + .slider:before{
+  transform:translateX(23px);
+}
+
+/* Section */
+.section{
+  margin-bottom:30px;
+}
+
+/* Controls */
+.controls{
+  background:var(--card);
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:30px;
+}
+button{
+  padding:10px 15px;
+  margin:5px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  color:white;
+}
+.on{background:var(--green);}
+.off{background:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>SmartHome</h2>
+  <li>Dashboard</li>
+  <li>Rooms</li>
+  <li>Energy</li>
+  <li>Settings</li>
+</div>
+
+<div class="main">
+
+<div class="topbar">
+  <h1>Dashboard</h1>
+  <div class="badge">Online</div>
+</div>
+
+<div class="energy">
+  <h3>Energy Usage</h3>
+  <p>Daily: 30 kWh</p>
+  <p>Monthly: 720 kWh</p>
+</div>
+
+<!-- Control Panel -->
+<div class="controls">
+  <button class="on" onclick="setAll(true)">Turn All ON</button>
+  <button class="off" onclick="setAll(false)">Turn All OFF</button>
+</div>
+
+<!-- Rooms -->
+<div class="section">
+<h2>Living Room</h2>
+<div class="grid" id="living"></div>
+</div>
+
+<div class="section">
+<h2>Kitchen</h2>
+<div class="grid" id="kitchen"></div>
+</div>
+
+<div class="section">
+<h2>Bedroom</h2>
+<div class="grid" id="bedroom"></div>
+</div>
+
+<script>
+const devices=[
+"Light","Fan","TV","Speaker","AC","Heater","Lamp","Router","Camera",
+"Console","Projector","Air Purifier","Socket","Alarm","Charger"
+];
+
+// create card
+function createCard(name,on=false){
+return `
+<div class="card">
+  <h3>${name}</h3>
+  <div class="status">${on?"ON":"OFF"}</div>
+  <label class="switch">
+    <input type="checkbox" ${on?"checked":""} onchange="toggleStatus(this)">
+    <span class="slider"></span>
+  </label>
+</div>`;
+}
+
+// toggle single appliance
+function toggleStatus(el){
+  const status = el.closest(".card").querySelector(".status");
+  status.textContent = el.checked ? "ON" : "OFF";
+}
+
+// turn all ON/OFF
+function setAll(state){
+  document.querySelectorAll(".switch input").forEach(el=>{
+    el.checked = state;
+    el.closest(".card").querySelector(".status").textContent = state?"ON":"OFF";
+  });
+}
+
+// load appliances
+function loadRoom(id){
+  const container = document.getElementById(id);
+  devices.forEach((d,i)=>{
+    container.innerHTML += createCard(d + " " + (i+1), i%2===0);
+  });
+}
+
+loadRoom("living");
+loadRoom("kitchen");
+loadRoom("bedroom");
+</script>
+
+</body>
+</html>
